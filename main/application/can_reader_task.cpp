@@ -21,7 +21,7 @@ CANReaderTask::CANReaderTask(can::Buffer& a, can::Buffer& b, core::Timer& timer,
             // Receive message
             err = can_receive(&can_msg, pdMS_TO_TICKS(ReadTimeout));
             if (err == ESP_OK) {
-                m_buf_cur->Push(can_msg);
+                m_buf_cur->Push(can_msg, m_timer.millis());
             } else if (err != ESP_ERR_TIMEOUT) {
                 ESP_LOGE("CanReader", "Failure in can_receive: %d", err);
             }

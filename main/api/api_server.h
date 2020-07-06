@@ -5,7 +5,7 @@
 
 #include "api_context.h"
 #include "ping_handler.h"
-#include "can_data_handler.h"
+#include "bus_status_handler.h"
 
 #include "can_data/era_can_data.h"
 
@@ -14,7 +14,12 @@ namespace api {
 using ApiServer = http::Server<Context,
     PingHandler,
 
-    EraBatteryDataHandler>;
+    BusStatusHandler,
+
+    EraGlobalInfoHandler,
+
+    EraBatteryInfoHandler,
+    EraBatteryStateHandler>;
 
 }
 

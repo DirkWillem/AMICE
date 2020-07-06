@@ -7,6 +7,9 @@
 namespace era {
 
 bool CANBusMatcher::Match(const can::Store& store) {
+    // TODO: Disable 'always Era'-mode
+    return true;
+
     auto magic_str = store.frame(Era_MagicString::ID);
     if (magic_str) {
         const char* stella19 = "STELLA19";

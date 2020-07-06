@@ -22,8 +22,9 @@ public:
     /**
      * Pushes a CAN message to the buffer
      * @param msg Message to push
+     * @param t Current timestamp
      */
-    void Push(const can_message_t& msg);
+    void Push(const can_message_t& msg, uint32_t t);
 
     /**
      * Resets the buffer

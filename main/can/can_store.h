@@ -53,6 +53,21 @@ public:
      */
     [[nodiscard]] std::optional<CANFrame> frame(uint16_t id) const;
 
+    template<typename Msg>
+    /**
+     * Returns a deserialized CAN message
+     * @tparam Msg CAN message type
+     * @return Deserialized message, or std::nullopt if the message wasn't received
+     */
+    [[nodiscard]] std::optional<Msg> message() const {
+        auto f = frame(Msg::ID);
+        if (f) {
+            return *reinterpret_cast<Msg*>(&(*f));
+        }
+
+        return std::nullopt;
+    }
+
 private:
     template<uint16_t Id, size_t NMsgs>
     void MessageToBuffer(std::array<CANFrame, NMsgs>& buffer, size_t& index) const {

@@ -268,6 +268,397 @@ struct SSB_Lights {
     bool rightIndicator : 1; // [On/Off]
 };
 
+/*
+ * LVC_Version: For logging/debugging
+ */
+struct LVC_Version {
+    static constexpr unsigned int ID = 115;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::LVC;
+
+    uint8_t controller_major_version; // [-]
+    uint8_t controller_minor_version; // [-]
+    uint8_t eslib_major_version; // [-]
+    uint8_t eslib_minor_version; // [-]
+    uint8_t csv2cpp_major_version; // [-]
+    uint8_t csv2cpp_minor_version; // [-]
+};
+
+/*
+ * BMS_SubStates: Sub-states of the BMS state machine
+ */
+struct BMS_SubStates {
+    static constexpr unsigned int ID = 200;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    BMSESSSubState essSubState; // [ESS s u b s t a t e]
+    SatelliteStartupState satStartupState; // [satellite s t a r t u p  s  t  a  t  e]
+    IVTStartupState ivtStartupState; // [IVT s t a r t u p  s  t  a  t  e]
+    BMSBalancingState balancingState; // [balancing s t a t e]
+    CellOvervoltageLimit cellOvervoltageState; // [cell o v e r v o l t a g e  s  t  a  t  e]
+    UVRecoveryState uvRecoveryState; // [undervoltage r e c o v e r y  s  t  a  t  e]
+};
+
+/*
+ * BMS_Inputs: Input measurements by the BMS state machine
+ */
+struct BMS_Inputs {
+    static constexpr unsigned int ID = 201;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    bool estop : 1; // [high/low]
+    bool hvilOk : 1; // [high/low]
+    bool hvilMid : 1; // [high/low]
+    bool imdOk : 1; // [high/low]
+    bool ivtOCS : 1; // [high/low]
+    bool satFaultInt : 1; // [high/low]
+    bool hvAuxNeg : 1; // [high/low]
+    bool hvAuxPos : 1; // [high/low]
+    bool hvContNegMeas : 1; // [high/low]
+    bool hvContPosMeas : 1; // [high/low]
+    bool lvcWake : 1; // [high/low]
+};
+
+/*
+ * BMS_OverridesAndContactors: Whether the overrides of the BMS are active and whether contactors are enabled
+ */
+struct BMS_OverridesAndContactors {
+    static constexpr unsigned int ID = 202;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    bool hvilOverridden; // [T/F]
+    bool imdOverridden; // [T/F]
+    bool ivtOCSOverridden; // [T/F]
+    bool enableNeg; // [T/F]
+    bool enablePos; // [T/F]
+    bool dischargeOff; // [T/F]
+};
+
+/*
+ * BMS_Current: Battery current as given by the IVT
+ */
+struct BMS_Current {
+    static constexpr unsigned int ID = 205;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    float current; // [A]
+};
+
+/*
+ * BMS_BatteryPower: Battery power usage
+ */
+struct BMS_BatteryPower {
+    static constexpr unsigned int ID = 207;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    float power; // [W]
+};
+
+/*
+ * BMS_SatInterfaceState: State of the BMS sat board interface
+ */
+struct BMS_SatInterfaceState {
+    static constexpr unsigned int ID = 208;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    BMSSatState state; // [state]
+    BMSSatError error; // [error]
+    uint8_t nSats; // [-]
+    uint8_t satTimeoutCounter; // [-]
+    bool satOK : 1; // [T/F]
+    bool undervoltage : 1; // [T/F]
+    bool overvoltage : 1; // [T/F]
+    bool auxUndervoltage : 1; // [T/F]
+    bool auxOvervoltage : 1; // [T/F]
+    bool comparatorUndervoltage : 1; // [T/F]
+    bool comparatorOvervoltage : 1; // [T/F]
+    bool communicationFault : 1; // [T/F]
+    bool systemFault : 1; // [T/F]
+    bool chipFault : 1; // [T/F]
+    bool gpiFault : 1; // [T/F]
+};
+
+/*
+ * BMS_SatBalancingControl: Control parameters for the BMS sat interface related to balancing
+ */
+struct BMS_SatBalancingControl {
+    static constexpr unsigned int ID = 211;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    uint16_t sat1BalancingChannels; // [bit a r r a y]
+    uint16_t sat2BalancingChannels; // [bit a r r a y]
+    uint16_t sat3BalancingChannels; // [bit a r r a y]
+    uint16_t balancingThresholdVoltage; // [mV]
+};
+
+/*
+ * BMS_SoCSoH: Battery State of Charge per %,  Battery State of Health per %
+ */
+struct BMS_SoCSoH {
+    static constexpr unsigned int ID = 212;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    float soc; // [%]
+    float soh; // [%]
+};
+
+/*
+ * BMS_SatPCBTemperatures: Sat Board PCB Temperatures, used to discover hot pcb for instance when balancing
+ */
+struct BMS_SatPCBTemperatures {
+    static constexpr unsigned int ID = 213;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    int16_t sat1pcbTemperature; // [c°C]
+    int16_t sat2pcbTemperature; // [c°C]
+    int16_t sat3pcbTemperature; // [c°C]
+};
+
+/*
+ * BMS_Version: BMS version message
+ */
+struct BMS_Version {
+    static constexpr unsigned int ID = 215;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    uint8_t swMajor; // [#]
+    uint8_t swMinor; // [#]
+    uint8_t eslibMajor; // [#]
+    uint8_t eslibMinor; // [#]
+    uint8_t cliMajor; // [#]
+    uint8_t cliMinor; // [#]
+};
+
+/*
+ * BMS_PCBTemperatures: PCB temperatures measured by the NTC's on the BMS
+ */
+struct BMS_PCBTemperatures {
+    static constexpr unsigned int ID = 216;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    int16_t ntc1; // [c°C]
+    int16_t ntc2; // [c°C]
+    int16_t ntc3; // [c°C]
+};
+
+/*
+ * BMS_HVMeasurements: Voltage measurements of the battery and the bus as received from the IVT
+ */
+struct BMS_HVMeasurements {
+    static constexpr unsigned int ID = 217;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    float batteryVoltage; // [V]
+    float busVoltage; // [V]
+};
+
+/*
+ * BMS_IVTOCSettings: Settings of the IVT current thresholds
+ */
+struct BMS_IVTOCSettings {
+    static constexpr unsigned int ID = 218;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::BMS;
+
+    IVTLimitState state; // [state]
+    IVTChargingLimitSetting chargingLimit; // [state]
+    IVTDischargingLimitSetting dischargingLimit; // [state]
+};
+
+/*
+ * ChC_Version: ChC version message
+ */
+struct ChC_Version {
+    static constexpr unsigned int ID = 500;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    uint8_t swMajor; // [#]
+    uint8_t swMinor; // [#]
+    uint8_t eslibMajor; // [#]
+    uint8_t eslibMinor; // [#]
+    uint8_t cliMajor; // [#]
+    uint8_t cliMinor; // [#]
+};
+
+/*
+ * ChC_MainsState: State of the charge controller and possible error reasons
+ */
+struct ChC_MainsState {
+    static constexpr unsigned int ID = 502;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    MainsChargingState state; // [state]
+    ChargingError error; // [error r e a s o n]
+    bool relayClosed : 1; // [T/F]
+    bool relayStatus : 1; // [T/F]
+    bool mosfetClosed : 1; // [T/F]
+    bool lockActive : 1; // [T/F]
+};
+
+/*
+ * ChC_BusMeasurement: Voltage and current measured at the bus side of the chargers
+ */
+struct ChC_BusMeasurement {
+    static constexpr unsigned int ID = 509;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    float voltage; // [V]
+    float current; // [A]
+};
+
+/*
+ * ChC_InputCurrent: RMS current measured at the input of the charger
+ */
+struct ChC_InputCurrent {
+    static constexpr unsigned int ID = 511;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    float current; // [A]
+};
+
+/*
+ * ChC_InputVoltage: Voltage measured at the input of the charger
+ */
+struct ChC_InputVoltage {
+    static constexpr unsigned int ID = 512;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    float voltage; // [V]
+};
+
+/*
+ * ChC_ControllerSetting: Target current and limiting factor of the BMS
+ */
+struct ChC_ControllerSetting_STRUCT {
+    static constexpr unsigned int ID = 517;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    float targetCurrent; // [A]
+    ChCLimitingFactor limitingFactor; // [Factor]
+    uint8_t eta; // [%]
+    bool enabled : 1; // [T/F]
+};
+
+/*
+ * ChC_ChargerOutputVoltages: Output voltages of the separate chargers connected to the ChC
+ */
+struct ChC_ChargerOutputVoltages {
+    static constexpr unsigned int ID = 518;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    uint16_t ch1Voltage; // [dV]
+    uint16_t ch2Voltage; // [dV]
+    uint16_t ch3Voltage; // [dV]
+};
+
+/*
+ * ChC_ChargerOutputCurrents: Output currents of the separate chargers connected to the ChC
+ */
+struct ChC_ChargerOutputCurrents {
+    static constexpr unsigned int ID = 519;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    uint16_t ch1Current; // [dA]
+    uint16_t ch2Current; // [dA]
+    uint16_t ch3Current; // [dA]
+};
+
+/*
+ * ChC_ProtocolState: State of the SAE J1772 protocol connection on the ChC
+ */
+struct ChC_ProtocolState {
+    static constexpr unsigned int ID = 520;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    SAEJ1772State state; // [state]
+    SAEJ1772Current current; // [current]
+    bool hasProximity; // [T/F]
+};
+
+/*
+ * ChC_ChargingControlState: State of the ChC charging control
+ */
+struct ChC_ChargingControlState {
+    static constexpr unsigned int ID = 522;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    ChargingState state; // [state]
+    DualChargerStrategySubState dualChargerSubState; // [state]
+    TripleChargerStrategySubState tripleChargerSubState; // [state]
+};
+
+/*
+ * ChC_ProtocolAmpacity: Ampacity according to the SAE J1772 protocol in case where the ampacity is equation-based
+ */
+struct ChC_ProtocolAmpacity {
+    static constexpr unsigned int ID = 523;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    float ampacity; // [A]
+};
+
+/*
+ * ChC_ChargerTemperatures: Charger temperatures
+ */
+struct ChC_ChargerTemperatures {
+    static constexpr unsigned int ID = 524;
+    static constexpr bool IsCAN20B = false;
+    static constexpr bool Empty = false;
+    static constexpr Controller Sender = Controller::ChC;
+
+    int16_t ch1Temperature; // [ddegC]
+    int16_t ch2Temperature; // [ddegC]
+    int16_t ch3Temperature; // [ddegC]
+};
+
 struct Era_MagicString {
     static constexpr unsigned int ID = 2019;
     static constexpr bool IsCAN20B = false;

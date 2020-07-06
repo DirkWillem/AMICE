@@ -1,25 +1,19 @@
 #include "can_buffer.h"
 
-#include "driver/timer.h"
-
 namespace can {
 
 Buffer::Buffer()
         : m_count{0} {}
 
-void Buffer::Push(const can_message_t& msg) {
+void Buffer::Push(const can_message_t& msg, uint32_t t) {
     // Ignore CAN2.0 B
     if (msg.extd)
         return;
 
-    // Get current time
-    uint64_t time;
-    timer_get_counter_value(TIMER_GROUP_0, TIMER_0, &time);
-
     // Write data to buffer
     m_buffer[m_count].data = *reinterpret_cast<const uint64_t*>(msg.data);
     m_buffer[m_count].len = msg.data_length_code;
-    m_buffer[m_count].timestamp = time;
+    m_buffer[m_count].timestamp = t;
     m_buffer[m_count].id = static_cast<uint16_t>(msg.identifier);
     ++m_count;
 }

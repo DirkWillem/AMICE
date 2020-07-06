@@ -13,18 +13,18 @@ struct CANMessageList {};
 template<typename Matcher, typename MsgList>
 struct CANDataHandler;
 
-template<typename Matcher, typename... Msgs>
-struct CANDataHandler<Matcher, CANMessageList<Msgs...>> {
+template<typename InfoMatcher, typename... Msgs>
+struct CANDataHandler<InfoMatcher, CANMessageList<Msgs...>> {
     static void Handle(Context* context, httpd_req_t* req) {
-        //if (Matcher::Match(context->store())) {
-        if (true) {
+        if (InfoMatcher::Match(context->bus_status().bus_info())) {
             std::array<can::CANFrame, sizeof...(Msgs)> buffer{};
             context->store().ToBuffer<Msgs::ID...>(buffer);
 
             httpd_resp_set_hdr(req, "Content-Type", "application/octet-stream");
-            httpd_resp_set_hdr(req, "Acces-Control-Allow-Origin", "*");
+            httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
             httpd_resp_send(req, reinterpret_cast<const char*>(buffer.data()), sizeof(buffer));
         } else {
+            httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
             httpd_resp_set_status(req, "400 Bad Request");
             httpd_resp_send(req, "", 0);
         }
