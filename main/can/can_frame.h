@@ -6,7 +6,7 @@
 namespace can {
 
 #pragma pack(push, 2)
-struct CANFrame {
+struct Frame {
     uint32_t timestamp;
     uint16_t id;
     bool empty: 1;
@@ -14,7 +14,7 @@ struct CANFrame {
     uint8_t len: 4;
     uint64_t data;
 
-    CANFrame();
+    Frame();
 };
 #pragma pack(pop)
 

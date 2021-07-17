@@ -18,7 +18,7 @@ namespace can {
  */
 class Store {
     // Assertions
-    static_assert(sizeof(CANFrame) == 16, "CANFrame must be 16 bytes large");
+    static_assert(sizeof(Frame) == 16, "CANFrame must be 16 bytes large");
 public:
     Store();
 
@@ -26,7 +26,7 @@ public:
      * Puts a frame to the store
      * @param frame Frame to put
      */
-    void Put(const CANFrame& frame);
+    void Put(const Frame& frame);
 
     /**
      * Puts all items in the buffer to the store
@@ -35,7 +35,7 @@ public:
     void Put(const Buffer& buffer);
 
     template<uint16_t... Ids>
-    void ToBuffer(std::array<CANFrame, sizeof...(Ids)>& buffer) const {
+    void ToBuffer(std::array<Frame, sizeof...(Ids)>& buffer) const {
         while(true) {
             if (m_mutex.Lock()) break;
         }
@@ -51,7 +51,7 @@ public:
      * @param id ID of the frame to get
      * @return Frame if it was received, std::nullopt otherwise
      */
-    [[nodiscard]] std::optional<CANFrame> frame(uint16_t id) const;
+    [[nodiscard]] std::optional<Frame> frame(uint16_t id) const;
 
     template<typename Msg>
     /**
@@ -70,7 +70,7 @@ public:
 
 private:
     template<uint16_t Id, size_t NMsgs>
-    void MessageToBuffer(std::array<CANFrame, NMsgs>& buffer, size_t& index) const {
+    void MessageToBuffer(std::array<Frame, NMsgs>& buffer, size_t& index) const {
         buffer[index].timestamp = m_a_frames[Id].timestamp;
         buffer[index].id = m_a_frames[Id].id;
         buffer[index].empty = m_a_frames[Id].empty;
@@ -80,10 +80,10 @@ private:
         index++;
     }
 
-    void PutNoMtx(const CANFrame& frame);
+    void PutNoMtx(const Frame& frame);
 
     /** Array containing all possible CAN 2.0A frames */
-    std::array<CANFrame, 2048> m_a_frames;
+    std::array<Frame, 2048> m_a_frames;
 
     mutable core::Mutex m_mutex;
 };

@@ -36,7 +36,7 @@ public:
      * @param index Index of the CAN message to read
      * @return message at index
      */
-    const CANFrame& operator[](size_t index) const;
+    const Frame& operator[](size_t index) const;
 
     /**
      * Returns the number of elements in the buffer
@@ -57,7 +57,7 @@ public:
     [[nodiscard]] bool full() const;
 private:
     size_t m_count;
-    std::array<CANFrame, CANBufferSize> m_buffer;
+    std::array<Frame, CANBufferSize> m_buffer;
 };
 
 }

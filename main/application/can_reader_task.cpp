@@ -11,6 +11,8 @@ CANReaderTask::CANReaderTask(can::Buffer& a, can::Buffer& b, core::Timer& timer,
     can_message_t can_msg{};
     esp_err_t err;
 
+    ESP_LOGI("CANReader", "Starting CAN reader");
+
     while(true) {
         auto t0 = m_timer.millis();
 
@@ -21,6 +23,7 @@ CANReaderTask::CANReaderTask(can::Buffer& a, can::Buffer& b, core::Timer& timer,
             // Receive message
             err = can_receive(&can_msg, pdMS_TO_TICKS(ReadTimeout));
             if (err == ESP_OK) {
+                //ESP_LOGI("CanReader", "Received CAN message (%d)", can_msg.identifier);
                 m_buf_cur->Push(can_msg, m_timer.millis());
             } else if (err != ESP_ERR_TIMEOUT) {
                 ESP_LOGE("CanReader", "Failure in can_receive: %d", err);

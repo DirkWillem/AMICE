@@ -20,7 +20,7 @@ void BusStatusHandler::Handle(Context *context, httpd_req_t *req) {
     cJSON_PrintPreallocated(obj, buf, 4096, cJSON_False);
 
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-    httpd_resp_set_hdr(req, "Content-Type", "application/json");
+    httpd_resp_set_type(req, "application/json");
     httpd_resp_send(req, buf, strlen(buf));
 }
 

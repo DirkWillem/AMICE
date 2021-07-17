@@ -22,7 +22,7 @@ void Buffer::Reset() {
     m_count = 0;
 }
 
-const CANFrame& Buffer::operator[](size_t index) const {
+const Frame& Buffer::operator[](size_t index) const {
     if (index < m_count)
         return m_buffer[index];
     return m_buffer[0];

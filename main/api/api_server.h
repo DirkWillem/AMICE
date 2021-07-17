@@ -19,7 +19,8 @@ using ApiServer = http::Server<Context,
     EraGlobalInfoHandler,
 
     EraBatteryInfoHandler,
-    EraBatteryStateHandler>;
+    EraBatteryStateHandler,
+    EraBatteryCellDataHandler>;
 
 }
 

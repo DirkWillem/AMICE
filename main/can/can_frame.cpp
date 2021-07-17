@@ -2,7 +2,7 @@
 
 namespace can {
 
-CANFrame::CANFrame()
+Frame::Frame()
         : timestamp{0}, empty{true}, pad{0}, len{0}, data{0} {}
 
 }

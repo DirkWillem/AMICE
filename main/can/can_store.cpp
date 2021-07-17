@@ -5,7 +5,7 @@ namespace can {
 Store::Store()
         : m_a_frames{}, m_mutex{} {}
 
-void Store::Put(const CANFrame& frame) {
+void Store::Put(const Frame& frame) {
     while(true) {
         if (m_mutex.Lock()) break;
     }
@@ -26,13 +26,13 @@ void Store::Put(const Buffer& buffer) {
     m_mutex.Unlock();
 }
 
-std::optional<CANFrame> Store::frame(uint16_t id) const {
+std::optional<Frame> Store::frame(uint16_t id) const {
     if (m_a_frames[id].empty)
         return std::nullopt;
     return m_a_frames[id];
 }
 
-void Store::PutNoMtx(const CANFrame& frame) {
+void Store::PutNoMtx(const Frame& frame) {
     auto& f = m_a_frames[frame.id];
     f.data = frame.data;
     f.empty = false;

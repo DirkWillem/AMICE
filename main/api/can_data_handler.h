@@ -17,10 +17,10 @@ template<typename InfoMatcher, typename... Msgs>
 struct CANDataHandler<InfoMatcher, CANMessageList<Msgs...>> {
     static void Handle(Context* context, httpd_req_t* req) {
         if (InfoMatcher::Match(context->bus_status().bus_info())) {
-            std::array<can::CANFrame, sizeof...(Msgs)> buffer{};
+            std::array<can::Frame, sizeof...(Msgs)> buffer{};
             context->store().ToBuffer<Msgs::ID...>(buffer);
 
-            httpd_resp_set_hdr(req, "Content-Type", "application/octet-stream");
+            httpd_resp_set_type(req, "application/octet-stream");
             httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
             httpd_resp_send(req, reinterpret_cast<const char*>(buffer.data()), sizeof(buffer));
         } else {

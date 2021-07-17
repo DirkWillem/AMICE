@@ -2,6 +2,7 @@
 #define AMICE_ERA_CAN_DATA_H
 
 #include "../can_data_handler.h"
+#include "../can_consecutive_data_handler.h"
 
 #include <canspec/era/era_canspec.h>
 #include <canspec/era/era_matcher.h>
@@ -23,7 +24,8 @@ struct EraGlobalInfoHandler
                 era::BMS_SoCSoH,
                 era::BMS_BatteryPower,
                 era::ChC_MainsState,
-                era::SSB_Lights>> {
+                era::SSB_Lights,
+                era::BMS_State>> {
     static constexpr const char* URI = "/data/era/global/info";
 };
 
@@ -58,6 +60,11 @@ struct EraBatteryStateHandler
                 era::BMS_IVTOCSettings
         >> {
     static constexpr const char* URI = "/data/era/batt/state";
+};
+
+struct EraBatteryCellDataHandler
+  : public CANConsecutiveDataHandler<EraInfoMatcher, 1080, 1091> {
+  static constexpr const char* URI = "/data/era/batt/cells";
 };
 
 }
